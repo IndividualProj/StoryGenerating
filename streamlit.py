@@ -11,6 +11,7 @@ def generateText(inputtext,storylen,genre,page):
             input=tokenizer(textinp, add_special_tokens=False, return_tensors="pt")["input_ids"]
             prompt_length = len(tokenizer.decode(input[0]))
             outputs = model.generate(input, max_length=story_length, do_sample=True, top_p=0.95, top_k=60)
+            print(inputtext)
             generated = story_start_with + tokenizer.decode(outputs[0],skip_special_tokens=True)[prompt_length+1:]
             #horror_result= story_gen("<BOS> <horror> "+horror_start_with+ "Tell me what happens in the story and how the story ends.",max_length=horror_length)[0]['generated_text'].replace("<BOS> <horror> ","")
             
