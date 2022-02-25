@@ -9,7 +9,7 @@ def generateText(inputtext,storylen,genre,page):
             model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2")
             textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
             story_gen=pipeline('text-generation',"pranavpsv/genre-story-generator-v2")
-            generated= story_gen(textinp,max_length=storylen)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace("Tell me what happens in the story and how the story ends.","")
+            generated= story_gen(textinp,max_length=storylen,top_k=96,temperature=1.2)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace("Tell me what happens in the story and how the story ends.","")
             print("method generated text:",generated)
             return(generated)
     # elif page==1:
