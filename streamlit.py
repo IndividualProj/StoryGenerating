@@ -6,14 +6,11 @@ from transformers import pipeline,AutoTokenizer, AutoModelForCausalLM
 def generateText(inputtext,storylen,genre,page):
     if page==0:
             tokenizer = AutoTokenizer.from_pretrained("pranavpsv/genre-story-generator-v2")
-            model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2", pad_token_id=tokenizer.eos_token_id)
+            model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2")
             textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
-            input=tokenizer(textinp, add_special_tokens=False, return_tensors="pt")["input_ids"]
-            prompt_length = len(tokenizer.decode(input[0]))
-            outputs = model.generate(input, max_length=story_length, do_sample=True, top_p=0.95, top_k=60)
-            generated = story_start_with + tokenizer.decode(outputs[0],skip_special_tokens=True)[prompt_length:]
-            #horror_result= story_gen("<BOS> <horror> "+horror_start_with+ "Tell me what happens in the story and how the story ends.",max_length=horror_length)[0]['generated_text'].replace("<BOS> <horror> ","")
-            
+            story_gen=pipeline('text-generation',"pranavpsv/genre-story-generator-v2")
+            generated= story_gen(textinp,max_length=storylen)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace("Tell me what happens in the story and how the story ends.","")
+            print("method generated text:",generated)
             return(generated)
     # elif page==1:
     #         sess = gpt2_simple.start_tf_sess()
@@ -42,8 +39,17 @@ if pageno=="Pipeline Based(Huggingface)":
             textinp="<BOS> <"+genre+"> "+story_start_with+ "Tell me what happens in the story and how the story ends."
             st.write("<DEBUGGING PURPOSES>Text input: ",textinp)
             with st.spinner(text="In progress..."):
-                
-                st.write(generateText(story_start_with,story_length,genre,page))
+                errorcheck=True
+                print("Generation starting:")
+                while errorcheck:
+                    print("Generating........")
+                    generated=generateText(story_start_with,story_length,genre,page)
+                    print("Text generated:"+generated)
+                    if generated!=story_start_with:
+                        st.write(generated)
+                        errorcheck=False
+
+
                 # input=tokenizer(textinp, add_special_tokens=False, return_tensors="pt")["input_ids"]
                 # prompt_length = len(tokenizer.decode(input[0]))
                 # outputs = model.generate(input, max_length=story_length, do_sample=True, top_p=0.95, top_k=60)
