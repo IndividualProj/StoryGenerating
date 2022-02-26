@@ -35,7 +35,7 @@ def generateText(inputtext,storylen,genre,page):
             #model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2")
             textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
             story_gen=pipeline('text-generation',"pranavpsv/genre-story-generator-v2")
-            generated= story_gen(textinp,max_length=storylen,top_k=96,temperature=1.2)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace("Tell me what happens in the story and how the story ends.","")
+            generated= story_gen(textinp,max_length=storylen,top_k=96,temperature=1.2)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace(" Tell me what happens in the story and how the story ends.","")
             print("method generated text:",generated)
 
             return(cleantext(generated))
@@ -44,8 +44,8 @@ def generateText(inputtext,storylen,genre,page):
             print("Model:",model)
             tokenizer = AutoTokenizer.from_pretrained('gpt2')
             generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
-            textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
-            generated = generator(textinp, max_length=storylen,temperature=1.0,top_p=0.65, top_k=96)[0]['generated_text'].replace("\n","")
+            textinp="<BOS> <"+genre+"> "+inputtext+ "What happens in the story and how does the story end?"
+            generated = generator(textinp, max_length=storylen,repetition_penalty=1.1,temperature=1.0,top_p=0.65, top_k=96)[0]['generated_text'].replace("\n","")
             #gpt2_simple.reset_session(sess)
             return cleantext(generated)
 
