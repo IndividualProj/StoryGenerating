@@ -1,8 +1,23 @@
+from array import array
 from cProfile import label
 import streamlit as st
 from transformers import pipeline,AutoTokenizer, AutoModelForCausalLM
 import regex as re
+import random
 import gpt_2_simple as gpt2
+
+messagetext=["Patience! This is difficult, you know...",
+  "Discovering new ways of making you wait...",
+  "Your time is very important to us. Please wait while we ignore you...",
+  "Please wait while the minions do their work...",
+  "Grabbing extra minions...",
+  "Doing the heavy lifting...",
+  "We're working very Hard .... Really...",
+  "Waking up the minions","Please wait while we serve other customers...",
+  "Feel free to spin in your chair",
+  "Please wait... Consulting the manual...",
+    "Ordering 1s and 0s...",
+      "If I’m not back in five minutes, just wait longer.",]
 
 def cleantext(text:str):
     
@@ -28,7 +43,7 @@ def generateText(inputtext,storylen,genre,page):
             tokenizer = AutoTokenizer.from_pretrained('gpt2')
             generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
             textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
-            generated = generator(textinp, length=storylen,temperature=0.7, top_k=96,prefix=inputtext,return_as_list=True)[0].replace("\n","")
+            generated = generator(textinp, length=storylen,temperature=0.65, top_k=96,prefix=inputtext,return_as_list=True)[0].replace("\n","")
             #gpt2_simple.reset_session(sess)
             return generated
 
@@ -51,7 +66,7 @@ if pageno=="Pipeline Based(Huggingface)":
             st.write("<DEBUGGING PURPOSES>Genre Chosen:",genre)
             textinp="<BOS> <"+genre+"> "+story_start_with+ "Tell me what happens in the story and how the story ends."
             st.write("<DEBUGGING PURPOSES>Text input: ",textinp)
-            with st.spinner(text="In progress..."):
+            with st.spinner(text=random.choice(messagetext)):
                 errorcheck=True
                 print("Generation starting:")
                 while errorcheck:
@@ -73,7 +88,7 @@ if pageno=="Model Based":
     page=1
     import gpt_2_simple as gpt2_simple
 
-    st.title("GeneratorStory-Pipeline Based Text Generation")
+    st.title("GeneratorStory-Model Based Text Generation")
     # story_gen = pipeline("text-generation", "pranavpsv/genre-story-generator-v2",max_length=400)
     with st.form('modelgenform'):
         story_start_with=st.text_input(label="Input your story prompt")
@@ -87,6 +102,7 @@ if pageno=="Model Based":
             st.write("<DEBUGGING PURPOSES>Genre Chosen:",genre)
             textinp="<BOS> <"+genre+"> "+story_start_with+ "Tell me what happens in the story and how the story ends."
             st.write("<DEBUGGING PURPOSES>Text input: ",textinp)
-            with st.spinner(text="In progress..."):
+            with st.spinner(text=random.choice(messagetext)):
                 
                 print(generateText(story_start_with,story_length,genre,page))
+
