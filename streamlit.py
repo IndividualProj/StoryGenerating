@@ -103,6 +103,13 @@ if pageno=="Model Based":
             textinp="<BOS> <"+genre+"> "+story_start_with+ "Tell me what happens in the story and how the story ends."
             st.write("<DEBUGGING PURPOSES>Text input: ",textinp)
             with st.spinner(text=random.choice(messagetext)):
-                
-                print(generateText(story_start_with,story_length,genre,page))
+                errorcheck=True
+                print("Generation starting:")
+                while errorcheck:
+                    print("Generating........")
+                    generated=generateText(story_start_with,story_length,genre,page)
+                    print("Text generated:"+generated)
+                    if generated!=story_start_with:
+                        st.write(generated)
+                        errorcheck=False
 
