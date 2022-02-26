@@ -27,9 +27,10 @@ def generateText(inputtext,storylen,genre,page):
             model = AutoModelForCausalLM.from_pretrained('./converted_model')
             tokenizer = AutoTokenizer.from_pretrained('gpt2')
             generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
-            generated = generator(sess, run_name='run1', length=storylen,temperature=0.7, top_k=96,prefix=inputtext,return_as_list=True)[0]).replace("\n","")
-            gpt2_simple.reset_session(sess)
-            return scary_result
+            textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
+            generated = generator(textinp, length=storylen,temperature=0.7, top_k=96,prefix=inputtext,return_as_list=True)[0].replace("\n","")
+            #gpt2_simple.reset_session(sess)
+            return generated
 
 
 pageno=st.sidebar.selectbox('Choose generator type',["Pipeline Based(Huggingface)","Model Based"])
