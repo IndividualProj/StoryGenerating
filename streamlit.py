@@ -25,6 +25,7 @@ def cleantext(text:str):
     text=text.replace('•',"(")
     text=text.replace('■',")")
     text=re.sub("[\(\[].*?[\)\]]", "", text)
+    text=re.sub('<[^>]+>', '', text)
     return text
 
 # @st.cache(suppress_st_warning=True)
@@ -44,7 +45,7 @@ def generateText(inputtext,storylen,genre,page):
             tokenizer = AutoTokenizer.from_pretrained('gpt2')
             generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
             textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
-            generated = generator(textinp, max_length=storylen,temperature=2.0, top_k=96)[0]['generated_text'].replace("\n","")
+            generated = generator(textinp, max_length=storylen,temperature=1.0,top_p=0.65, top_k=96)[0]['generated_text'].replace("\n","")
             #gpt2_simple.reset_session(sess)
             return cleantext(generated)
 
