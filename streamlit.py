@@ -40,6 +40,7 @@ def generateText(inputtext,storylen,genre,page):
             return(cleantext(generated))
     elif page==1:
             model = AutoModelForCausalLM.from_pretrained('./converted_model')
+            print("Model:",model)
             tokenizer = AutoTokenizer.from_pretrained('gpt2')
             generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
             textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
