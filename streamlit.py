@@ -43,7 +43,7 @@ def generateText(inputtext,storylen,genre,page):
             tokenizer = AutoTokenizer.from_pretrained('gpt2')
             generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
             textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
-            generated = generator(textinp, length=storylen,temperature=0.65, top_k=96).replace("\n","")
+            generated = generator(textinp, length=storylen,temperature=0.65, top_k=96)[0]['generated_text'].replace("\n","")
             #gpt2_simple.reset_session(sess)
             return generated
 
