@@ -46,21 +46,21 @@ def generateText(inputtext,storylen,genre,page):
                 tokenizer = AutoTokenizer.from_pretrained("gpt2")
                 model = AutoModelForCausalLM.from_pretrained("wexnertan/storygenhorror")
                 story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
-                generated= story_gen(inputtext,max_length=storylen,top_p=65,top_k=96,temperature=1.2,repetition_penalty=1,no_repeat_ngrams=3)[0]['generated_text']
+                generated= story_gen(inputtext,max_length=storylen,top_p=65,top_k=96,temperature=1.2,repetition_penalty=1,no_repeat_ngram_size=3)[0]['generated_text']
                 return generated
             elif genre=='drama':
                 print("=============================DRAMA GENERATION IN PROGRESS====================================")
                 tokenizer = AutoTokenizer.from_pretrained("gpt2")
                 model = AutoModelForCausalLM.from_pretrained("wexnertan/storygendrama")
                 story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
-                generated= story_gen(inputtext,max_length=storylen,top_p=65,top_k=96,temperature=1.2,repetition_penalty=1,no_repeat_ngrams=3)[0]['generated_text']
+                generated= story_gen(inputtext,max_length=storylen,top_p=65,top_k=96,temperature=1.2,repetition_penalty=1,no_repeat_ngram_size=3)[0]['generated_text']
                 return generated
             elif genre=='sci_fi':
                 print("=============================SCIFI GENERATION IN PROGRESS====================================")
                 tokenizer = AutoTokenizer.from_pretrained("gpt2")
                 model = AutoModelForCausalLM.from_pretrained("wexnertan/storygenscifi")
                 story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
-                generated= story_gen(inputtext,max_length=storylen,top_p=65,top_k=96,temperature=1.2,repetition_penalty=1,no_repeat_ngrams=3)[0]['generated_text']
+                generated= story_gen(inputtext,max_length=storylen,top_p=65,top_k=96,temperature=1.2,repetition_penalty=1,no_repeat_ngram_size=3)[0]['generated_text']
                 return generated
             # sess = gpt2.start_tf_sess()
             # if genre=='horror':
