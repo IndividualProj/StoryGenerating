@@ -32,8 +32,8 @@ def cleantext(text:str):
 # @st.cache(suppress_st_warning=True)
 def generateText(inputtext,storylen,genre,page):
     if page==0:
-            #tokenizer = AutoTokenizer.from_pretrained("pranavpsv/genre-story-generator-v2")
-            #model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2")
+            tokenizer = AutoTokenizer.from_pretrained("pranavpsv/genre-story-generator-v2")
+            model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2")
             textinp="<BOS> <"+genre+"> "+inputtext+ "Tell me what happens in the story and how the story ends."
             story_gen=pipeline('text-generation',"pranavpsv/genre-story-generator-v2")
             generated= story_gen(textinp,max_length=storylen,top_k=96,temperature=1.2)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace(" Tell me what happens in the story and how the story ends.","")
@@ -42,16 +42,25 @@ def generateText(inputtext,storylen,genre,page):
             return(cleantext(generated))
     elif page==1:
             if genre=='horror':
-                story_gen=pipeline('text-generation',"wexnertan/storygenhorror")
-                generated= story_gen(textinp,max_length=storylen)[0]['generated_text']
+                print("=============================HORROR GENERATION IN PROGRESS====================================")
+                tokenizer = AutoTokenizer.from_pretrained("gpt2")
+                model = AutoModelForCausalLM.from_pretrained("wexnertan/storygenhorror")
+                story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
+                generated= story_gen(inputtext,max_length=storylen,top_k=96,temperature=1.2,repetition_penalty=1)[0]['generated_text']
                 return generated
             elif genre=='drama':
-                story_gen=pipeline('text-generation',"wexnertan/storygendrama")
-                generated= story_gen(textinp,max_length=storylen)[0]['generated_text']
+                print("=============================DRAMA GENERATION IN PROGRESS====================================")
+                tokenizer = AutoTokenizer.from_pretrained("gpt2")
+                model = AutoModelForCausalLM.from_pretrained("wexnertan/storygendrama")
+                story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
+                generated= story_gen(inputtext,max_length=storylen,top_k=96,temperature=1.2)[0]['generated_text']
                 return generated
             elif genre=='sci_fi':
-                story_gen=pipeline('text-generation',"wexnertan/storygenscifi")
-                generated= story_gen(textinp,max_length=storylen)[0]['generated_text']
+                print("=============================SCIFI GENERATION IN PROGRESS====================================")
+                tokenizer = AutoTokenizer.from_pretrained("gpt2")
+                model = AutoModelForCausalLM.from_pretrained("wexnertan/storygenscifi")
+                story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
+                generated= story_gen(inputtext,max_length=storylen,top_k=96,temperature=1.2)[0]['generated_text']
                 return generated
             # sess = gpt2.start_tf_sess()
             # if genre=='horror':
