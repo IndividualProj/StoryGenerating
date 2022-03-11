@@ -7,7 +7,7 @@ import streamlit as st
 from transformers import pipeline,AutoTokenizer, AutoModelForCausalLM
 import regex as re
 import random
-from streamlit_lottie import st_lottie
+#from streamlit_lottie import st_lottie
 import os,requests
 import gpt_2_simple as gpt2
 
@@ -63,7 +63,7 @@ def generateText(inputtext,storylen,genre,page):
                 
                 story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
                 #generated= story_gen(inputtext,max_length=storylen,temperature=1.2,repetition_penalty=1.05,no_repeat_ngram_size=4)[0]['generated_text']
-                generated= story_gen(inputtext,max_length=storylen,temperature=1.2,repetition_penalty=1.05,top_k=95)[0]['generated_text']
+                generated= story_gen(inputtext,max_length=storylen,temperature=1.2,top_k=95,top_p=65)[0]['generated_text']
                 # return generated
             elif genre=='drama':
                 print("=============================DRAMA GENERATION IN PROGRESS====================================")
@@ -139,11 +139,11 @@ def generateText(inputtext,storylen,genre,page):
             gpt2.reset_session(sess)
             return generated
 
-def load_lottieurl(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+# def load_lottieurl(url: str):
+#     r = requests.get(url)
+#     if r.status_code != 200:
+#         return None
+#     return r.json()
 # lottie_url_hello = "https://assets4.lottiefiles.com/packages/lf20_pnpeymnv.json"
 # lottie_hello = load_lottieurl(lottie_url_hello)
 # st_lottie(lottie_hello, key="GeneratorStory")
