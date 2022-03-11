@@ -1,0 +1,116 @@
+Week 1: 20th September
+
+4 Hours: Read Project
+
+2 Hours: Decide which project to choose
+
+1 Hour : Select and rank top 8
+
+Total Hours: 7
+
+Week 2: 27th September
+
+0.5 Hour : Meeting with supervisor
+
+1 hour : Planning questions to ask for initial meeting
+
+7 hours: Watch videos on NLP as introduction
+
+3 hours: Read up articles on GPT-2 and BERT
+
+Total hours: 11.5
+
+Week 3: 4th October
+
+0.5 Hour: Meeting with Supervisor
+4 hours: Looking through huggingface, trying out models to familiarise
+8 hours: Familiarising with GPT-2 and bert
+Total hours: 12.5
+
+Week 4: 11th October
+0.5 hour: Meeting with Supervisor
+
+2 hours: Researching effects on parameters on GPT-2 models (top_p/top_k/num_beams)
+
+2 hours: Reading documents on huggingface
+
+
+Total hours: 4.5
+
+Week 5: 18th October
+0.5 hour: Supervisor Meeting
+
+3.5 hours: Looking into huggingface APIs usage and testing with codes
+
+4 hours: Testing models on huggingface for story-genre based text generation functionality.
+
+1 hour: Selecting model on huggingface to use with API
+
+Total hours: 9
+
+
+Week 6: 25th October
+0.5 hours: Supervisor meeting
+
+2.5 hours: Testing limitations of model with special tokens (<BOS> <genre>)
+
+2.5 hours: Testing limitations of GPT2 model using sentence identifiers (what happens next?)
+
+Total hours: 5.5
+
+Week 7: 1st November
+
+0.5 hours: Supervisor meeting 
+
+6 hours: Reading and researching for GPT-2 model training packages
+
+Chose GPT-2-simple to train models in the future.
+
+3 hours: Reading gpt-2-simple notes on github and youtube (able to use to generate text with different syntaxes)
+
+Total hours: 9.5
+
+Week 8: 8th November
+
+0.5 hours: Supervisor meeting
+
+1 hour: searching for relevant training dataset on kaggle
+
+1 hour: Cleaning and formatting dataset using Jupyter notebook (adding bos tokens and genre tokens for each story)
+
+19 hours: Training model using Jupyter notebook
+
+Total hours: 21.5
+
+Week 9: 15th November
+
+Week 10: 22nd November
+
+Week 11: 29th November
+
+Week 12: 6th December
+
+Week 13: 13th December
+
+Week 14: 20th December
+
+Week 15: 27th December
+
+Week 16: 3rd January
+
+Week 17: 10th January
+
+Week 18: 17th January
+
+Week 19: 24th January
+
+Week 20: 31st January
+
+Week 21: 7th February
+
+Week 22: 14th February
+
+Week 23: 21st February
+
+Week 24: 28th February
+

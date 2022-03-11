@@ -5,4 +5,5 @@ itsdangerous==2.0.1
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.8.0+cpu
 gpt-2-simple==0.8.1
+gtts==2.2.3
 
