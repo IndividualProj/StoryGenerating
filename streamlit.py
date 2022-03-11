@@ -1,6 +1,7 @@
 from array import array
 from cProfile import label
 from email.mime import audio
+from json import load
 from lib2to3.pgen2 import token
 from os import truncate
 import streamlit as st
@@ -58,29 +59,39 @@ def generateText(inputtext,storylen,genre,page):
     elif page==0:
             if genre=='horror':
                 print("=============================HORROR GENERATION IN PROGRESS====================================")
-                model = AutoModelForCausalLM.from_pretrained("wexnertan/storygenhorror")
+                @st.cache
+                def loadhorrormodel():
+                    horrormodel = AutoModelForCausalLM.from_pretrained("wexnertan/storygenhorror")
+                    return horrormodel
+                model=loadhorrormodel()
                 tokenizer = AutoTokenizer.from_pretrained("gpt2")
-                
                 story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
-                #generated= story_gen(inputtext,max_length=storylen,temperature=1.2,repetition_penalty=1.05,no_repeat_ngram_size=4)[0]['generated_text']
-                generated= story_gen(inputtext,max_length=storylen,temperature=1.2,top_k=95,top_p=65)[0]['generated_text']
+                generated= story_gen(inputtext,max_length=storylen,do_sample=True,repetition_penalty=1.00,no_repeat_ngram_size=4)[0]['generated_text']
+                #generated= story_gen(inputtext,max_length=storylen,do_sample=True,top_k=95,top_p=0.95)[0]['generated_text']
                 # return generated
             elif genre=='drama':
                 print("=============================DRAMA GENERATION IN PROGRESS====================================")
-                model = AutoModelForCausalLM.from_pretrained("wexnertan/storygendrama")
+                @st.cache
+                def loaddramamodel():
+                    dramamodel = AutoModelForCausalLM.from_pretrained("wexnertan/storygendrama")
+                    
+                    return dramamodel
+                model=loaddramamodel()
                 tokenizer = AutoTokenizer.from_pretrained("gpt2")
-                
                 story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
-                generated= story_gen(inputtext,max_length=storylen,temperature=1.2,repetition_penalty=1,no_repeat_ngram_size=3)[0]['generated_text']
+                generated= story_gen(inputtext,max_length=storylen,do_sample=True,repetition_penalty=1.00,no_repeat_ngram_size=4)[0]['generated_text']
                 # return generated
             elif genre=='sci_fi':
 
                 print("=============================SCIFI GENERATION IN PROGRESS====================================")
-                model = AutoModelForCausalLM.from_pretrained("wexnertan/storygenscifi")
+                @st.cache
+                def loaddramamodel():
+                    scifimodel = AutoModelForCausalLM.from_pretrained("wexnertan/storygenscifi")
+                    return scifimodel
+                model=loaddramamodel()
                 tokenizer = AutoTokenizer.from_pretrained("gpt2")
-                
                 story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
-                generated= story_gen(inputtext,max_length=storylen,temperature=1.2,repetition_penalty=1,no_repeat_ngram_size=3)[0]['generated_text']
+                generated= story_gen(inputtext,max_length=storylen,do_sample=True,repetition_penalty=1.00,no_repeat_ngram_size=4)[0]['generated_text']
             return cleantext(generated)
             # sess = gpt2.start_tf_sess()
             # if genre=='horror':
@@ -163,9 +174,9 @@ if pageno=="Pipeline Based(Huggingface)":
         
         submit=st.form_submit_button("Submit")
     if submit:
-        st.write("<DEBUGGING PURPOSES>Genre Chosen:",genre)
+        #st.write("<DEBUGGING PURPOSES>Genre Chosen:",genre)
         textinp="<BOS> <"+genre+"> "+story_start_with
-        st.write("<DEBUGGING PURPOSES>Text input: ",textinp)
+        #st.write("<DEBUGGING PURPOSES>Text input: ",textinp)
         with st.spinner(text=random.choice(messagetext)):
             errorcheck=True
             print("Generation starting:")
@@ -200,9 +211,9 @@ if pageno=="Model Based":
             genre="sci_fi"
         submit=st.form_submit_button("Submit")
         if submit:
-            st.write("<DEBUGGING PURPOSES>Genre Chosen:",genre)
+            #st.write("<DEBUGGING PURPOSES>Genre Chosen:",genre)
             textinp=story_start_with
-            st.write("<DEBUGGING PURPOSES>Text input: ",textinp)
+            #st.write("<DEBUGGING PURPOSES>Text input: ",textinp)
             with st.spinner(text=random.choice(messagetext)):
                 errorcheck=True
                 print("Generation starting:")
