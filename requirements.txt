@@ -6,4 +6,4 @@ itsdangerous==2.0.1
 torch==1.8.0+cpu
 gpt-2-simple==0.8.1
 gtts==2.2.3
-nltk @ file:///tmp/build/80754af9/nltk_1592496090529/work
+nltk
