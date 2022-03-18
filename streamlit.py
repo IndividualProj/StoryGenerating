@@ -11,6 +11,9 @@ import random
 #from streamlit_lottie import st_lottie
 import os,requests
 import gpt_2_simple as gpt2
+import nltk
+from nltk.translate.bleu_score import corpus_bleu
+from nltk import tokenize
 
 from gtts import gTTS
 import os
@@ -66,7 +69,7 @@ def generateText(inputtext,storylen,genre,page):
                 model=loadhorrormodel()
                 tokenizer = AutoTokenizer.from_pretrained("gpt2")
                 story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
-                generated= story_gen(inputtext,max_length=storylen,do_sample=True,repetition_penalty=1.00,no_repeat_ngram_size=4)[0]['generated_text']
+                generated= story_gen(inputtext,max_length=storylen,do_sample=True,repetition_penalty=1.00,no_repeat_ngram_size=4,top_p=95)[0]['generated_text']
                 #generated= story_gen(inputtext,max_length=storylen,do_sample=True,top_k=95,top_p=0.95)[0]['generated_text']
                 # return generated
             elif genre=='drama':
@@ -186,6 +189,10 @@ if pageno=="Pipeline Based(Huggingface)":
                 print("Text generated:"+generated)
                 if generated!=story_start_with:
                     st.write(generated)
+                    nltk.download("punkt")
+                    gensentences=tokenize.sent_tokenize(generated)
+                    orisentences=tokenize.sent_tokenize(story_start_with)
+                    st.write('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gensentences]] , [y.split() for y in orisentences])))
                     errorcheck=False
             #os.mkdir("temp")
             audio(generated)
@@ -223,5 +230,9 @@ if pageno=="Model Based":
                     print("Text generated:"+generated)
                     if generated!=story_start_with:
                         st.write(generated)
+                        nltk.download("punkt")
+                        gensentences=tokenize.sent_tokenize(generated)
+                        orisentences=tokenize.sent_tokenize(story_start_with)
+                        st.write('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gensentences]] , [y.split() for y in orisentences])))   
                         errorcheck=False
             audio(generated)
