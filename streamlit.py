@@ -75,6 +75,94 @@ def generateText(inputtext,storylen,genre,page):
         for i in generated:
             newgeneratedlist.append(i.replace(inputtexts,""))
         return newgeneratedlist
+        
+            # if genre=='horror':
+            #     print("=============================HORROR GENERATION IN PROGRESS====================================")
+            #     @st.cache
+            #     def loadhorrormodel():
+            #         horrormodel = AutoModelForCausalLM.from_pretrained("wexnertan/storygenhorror")
+            #         return horrormodel
+            #     model=loadhorrormodel()
+            #     tokenizer = AutoTokenizer.from_pretrained("gpt2")
+            #     storylen=len(tokenizer(inputtext)['input_ids'])+storylen
+            #     story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
+            #     generated= story_gen(inputtext,max_length=storylen+20,do_sample=True,repetition_penalty=1.00,no_repeat_ngram_size=3,num_return_sequences=3)
+                
+            #     #generated= story_gen(inputtext,max_length=storylen,do_sample=True,top_k=95,top_p=0.95)[0]['generated_text']
+            #     # return generated
+            # elif genre=='drama':
+            #     print("=============================DRAMA GENERATION IN PROGRESS====================================")
+            #     @st.cache
+            #     def loaddramamodel():
+            #         dramamodel = AutoModelForCausalLM.from_pretrained("wexnertan/storygendrama")
+                    
+            #         return dramamodel
+            #     model=loaddramamodel()
+            #     tokenizer = AutoTokenizer.from_pretrained("gpt2")
+            #     story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
+                
+            #     generated= story_gen(inputtext,max_length=storylen,do_sample=True,repetition_penalty=1.00,no_repeat_ngram_size=3,nsamples=3)
+            #     # return generated
+            # elif genre=='sci_fi':
+
+            #     print("=============================SCIFI GENERATION IN PROGRESS====================================")
+            #     @st.cache
+            #     def loaddramamodel():
+            #         scifimodel = AutoModelForCausalLM.from_pretrained("wexnertan/storygenscifi")
+            #         return scifimodel
+            #     model=loaddramamodel()
+            #     tokenizer = AutoTokenizer.from_pretrained("gpt2")
+            #     story_gen=pipeline('text-generation',model=model,tokenizer=tokenizer)
+            #     generated= story_gen(inputtext,max_length=storylen,do_sample=True,repetition_penalty=1.00,no_repeat_ngram_size=3,nsamples=3)
+            # print(generated)
+        #return generated
+            # sess = gpt2.start_tf_sess()
+            # if genre=='horror':
+            #     print("loading horror model")
+            #     gpt2.load_gpt2(sess, run_name='horror')
+            #     textinp=inputtext
+            #     generated = gpt2.generate(
+            #         sess,
+            #         run_name='horror',
+            #         prefix=textinp, 
+            #         length=storylen,
+            #         temperature=1.2,
+            #         #truncate=True, 
+            #         top_k=65,
+            #         top_p=0.90,
+            #         return_as_list=True
+            #         )[0].replace("\n","")
+            # elif genre=='drama':
+            #     print("loading drama model")
+            #     gpt2.load_gpt2(sess, run_name='drama')
+            #     textinp=inputtext
+            #     generated = gpt2.generate(
+            #         sess,
+            #         run_name='drama',
+            #         prefix=textinp, 
+            #         length=storylen,
+            #         #temperature=1.2,
+            #         #truncate=True,
+            #         #top_p=0.65, 
+            #         #top_k=96,
+            #         return_as_list=True
+            #         )[0].replace("\n","")
+            # elif genre=='sci_fi':
+            #     print("loading scifi model")
+            #     gpt2.load_gpt2(sess, run_name='scifi')
+            #     textinp=inputtext
+            #     generated = gpt2.generate(
+            #         sess,
+            #         run_name='scifi',
+            #         prefix=textinp, 
+            #         length=storylen,
+            #         #temperature=1.2,
+            #         #truncate=True,
+            #         #top_p=0.65, 
+            #         #top_k=96,
+            #         return_as_list=True
+            #         )[0].replace("\n","")
+
             # prefix to the generate function to force the text to start with a given character sequence and generate text from there (good if you add an indicator when the text starts).
             # length: Number of tokens to generate (default 1023, the maximum)
             # temperature: The higher the temperature, the crazier the text (default 0.7, recommended to keep between 0.7 and 1.0)
@@ -181,5 +269,6 @@ if pageno=="Model Based":
     print(generated)
     choice=st.radio("Choose one",generated,key="gentexted",on_change=updatetext)
     st.write(st.session_state.text)
+    
     #audio(st.session_state.text)
     
