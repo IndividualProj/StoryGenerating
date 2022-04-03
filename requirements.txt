@@ -7,3 +7,4 @@ torch==1.8.0+cpu
 gpt-2-simple==0.8.1
 gtts==2.2.3
 nltk
+click==8.0.4
