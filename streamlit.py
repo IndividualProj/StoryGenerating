@@ -52,30 +52,35 @@ def cleantext(text:str):
     return text
 
 # @st.cache(suppress_st_warning=True)
-def generateText(inputtext,storylen,genre,page):
+def generateText(inputtext,storylen,genre,page,interactive):
     # storylen=len(inputtext)*0.5+storylen
     if page==1:
             tokenizer = AutoTokenizer.from_pretrained("pranavpsv/genre-story-generator-v2")
             model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2")
             textinp="<BOS> <"+genre+"> "+inputtext
             story_gen=pipeline('text-generation',"pranavpsv/genre-story-generator-v2")
-            generated= story_gen(textinp,max_length=storylen,top_k=96,temperature=1.2)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace(" Tell me what happens in the story and how the story ends.","")
+            generated= story_gen(textinp,max_length=storylen,top_k=65)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace(" Tell me what happens in the story and how the story ends.","")
             print("method generated text:",generated)
-
             return(cleantext(generated))
-    elif page==0:
+
+    elif page==0 and interactive=="Interactive":
         sess=gpt2.start_tf_sess()
         gpt2.load_gpt2(sess, run_name='stories')
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
         storylen=len(tokenizer(inputtext)['input_ids'])+storylen
         inputtexts="Genre: "+genre+" Plot: "+inputtext
-        
         generated=gpt2.generate(sess,run_name="stories",prefix=inputtexts, include_prefix=False,length=storylen,nsamples=3,truncate="<|endoftext|>",return_as_list=True)
         newgeneratedlist=[]
         for i in generated:
             newgeneratedlist.append(i.replace(inputtexts,""))
         return newgeneratedlist
-        
+    elif page==0 and interactive=="Non-interactive":
+        sess=gpt2.start_tf_sess()
+        gpt2.load_gpt2(sess, run_name='stories')
+        tokenizer = AutoTokenizer.from_pretrained("gpt2")
+        inputtexts="Genre: "+genre+" Plot: "+inputtext
+        generated=gpt2.generate(sess,run_name="stories",prefix=inputtexts, top_k=65,include_prefix=True,length=storylen,truncate="<|endoftext|>",return_as_list=True)
+        return generated[0]
             # if genre=='horror':
             #     print("=============================HORROR GENERATION IN PROGRESS====================================")
             #     @st.cache
@@ -182,6 +187,8 @@ def generateText(inputtext,storylen,genre,page):
 # lottie_hello = load_lottieurl(lottie_url_hello)
 # st_lottie(lottie_hello, key="GeneratorStory")
 pageno=st.sidebar.selectbox('Choose generator type',["Model Based","Pipeline Based(Huggingface)"])
+if pageno=="Model Based":
+    interactive=st.sidebar.radio("",("Non-interactive","Interactive"))
 if pageno=="Pipeline Based(Huggingface)":
     page=1
     st.title("GeneratorStory-Pipeline Based Text Generation")
@@ -189,7 +196,7 @@ if pageno=="Pipeline Based(Huggingface)":
     with st.form('textgenform'):
         st.info("Optimal Story Generation at 150-250 words")
         story_start_with=st.text_input(label="Input your story prompt")
-        story_length=st.slider("Maximum word length",min_value=50,max_value=400)
+        story_length=st.slider("Maximum word length",min_value=50,max_value=300)
         genre=st.selectbox('Choose your genre:',('Horror','Drama','Scifi'))
         genre=genre.lower()
         if genre=="scifi":
@@ -205,14 +212,14 @@ if pageno=="Pipeline Based(Huggingface)":
             print("Generation starting:")
             while errorcheck:
                 print("Generating........")
-                generated=generateText(story_start_with,story_length,genre,page)
+                generated=generateText(story_start_with,story_length,genre,page,"hf")
                 print("Text generated:"+generated)
                 if generated!=story_start_with:
                     st.write(generated)
                     nltk.download("punkt")
                     gensentences=tokenize.sent_tokenize(generated)
                     orisentences=tokenize.sent_tokenize(story_start_with)
-                    st.write('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gensentences]] , [y.split() for y in orisentences])))
+                    print('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gensentences]] , [y.split() for y in orisentences])))
                     errorcheck=False
             #os.mkdir("temp")
             audio(generated)
@@ -224,10 +231,11 @@ if pageno=="Pipeline Based(Huggingface)":
                     # st.write(generated)
 if pageno=="Model Based":
     page=0
+    #st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;}</style>', unsafe_allow_html=True)
     #import gpt_2_simple as gpt2_simple
-
+    #interactive=st.radio("",("Interactive","Non-interactive"))
     st.title("GeneratorStory-Model Based Text Generation")
-    # # story_gen = pipeline("text-generation", "pranavpsv/genre-story-generator-v2",max_length=400)
+    # #   story_gen = pipeline("text-generation", "pranavpsv/genre-story-generator-v2",max_length=400)
     #     st.info("Optimal Story Generation at 150-250 words")
     #     story_start_with=st.text_input(label="Input your story prompt")
     #     story_length=st.slider("Maximum word length",min_value=50,max_value=400)
@@ -255,20 +263,45 @@ if pageno=="Model Based":
     #                     st.write('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gensentences]] , [y.split() for y in orisentences])))   
     #                     errorcheck=False
     #         audio(generated)
-    if "text" not in st.session_state:
-        st.session_state.text=""
-    def updatetext():
-        st.session_state.text+=st.session_state.gentexted
-    genre=st.selectbox('Choose your genre:',('Horror','Drama','Scifi','Comedy','Thriller','Adventure','Superhero','Romance'))
-    genre=genre.lower()
-    if genre=="scifi":
-        genre="sci_fi"
-    story_length=st.slider("Maximum word length",min_value=10,max_value=20)
-    story_start_with=st.text_input(label="Input your story prompt(Plot)",key='text')
-    generated=generateText(story_start_with,story_length,genre,page)
-    print(generated)
-    choice=st.radio("Choose one",generated,key="gentexted",on_change=updatetext)
-    st.write(st.session_state.text)
     
+    if interactive=="Interactive":
+        if "text" not in st.session_state:
+            st.session_state.text=""
+        def updatetext():
+            st.session_state.text+=st.session_state.gentexted
+        genre=st.selectbox('Choose your genre:',('Horror','Drama','Scifi','Comedy','Thriller','Adventure','Superhero','Romance'))
+        genre=genre.lower()
+        story_length=st.slider("Maximum word length",min_value=10,max_value=20)
+        story_start_with=st.text_input(label="Input your story prompt(Plot)",key='text')
+        
+        generated=generateText(story_start_with,story_length,genre,page,interactive)
+        print(generated)
+        choice=st.radio("Choose one",generated,key="gentexted",on_change=updatetext)
+        st.write(st.session_state.text)
+
+
+    if interactive=="Non-interactive":
+        st.info("Optimal Story Generation at 150-250 words")
+        story_start_with=st.text_input(label="Input your story prompt")
+        genre=st.selectbox('Choose your genre:',('Horror','Drama','Scifi','Comedy','Thriller','Adventure','Superhero','Romance'))
+        genre=genre.lower()
+        story_length=st.slider("Maximum word length",min_value=50,max_value=300)
+        submit=st.button("Submit")
+        if submit:
+            with st.spinner(random.choice(messagetext)):
+                errorcheck=True
+                print("Generation starting:")
+                while errorcheck:
+                    print("Generating........")
+                    generated=generateText(story_start_with,story_length,genre,page,interactive)
+                    print("Text generated:")
+                    print(generated)
+                    if generated!=story_start_with:
+                        st.write(generated)
+                        nltk.download("punkt")
+                        gensentences=tokenize.sent_tokenize(generated)
+                        orisentences=tokenize.sent_tokenize(story_start_with)
+                        print('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gensentences]] , [y.split() for y in orisentences])))   
+                        errorcheck=False
     #audio(st.session_state.text)
     
