@@ -258,7 +258,7 @@
 
 ## Week 22
 
-### 16th February
+### 16th February --survey
 
 ## Week 23
 
@@ -278,7 +278,7 @@
 ## Week 26
 
 ### 16th March
-* *4 hour* Implementing interactive function
+* *4 hour* Implementing interactive function --redo survey --resend out survey 
 
 ## Week 27
 

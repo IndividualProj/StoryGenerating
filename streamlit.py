@@ -33,6 +33,12 @@ messagetext=["Patience! This is difficult, you know...",
   "Please wait... Consulting the manual...",
     "Ordering 1s and 0s...",
       "If I’m not back in five minutes, just wait longer.",]
+hide_menu_style = """
+        <style>
+        #MainMenu {visibility: hidden;}
+        </style>
+        """
+st.markdown(hide_menu_style, unsafe_allow_html=True)
 def audio(text:str):
             myobj = gTTS(text=text, lang="en", slow=False)
             myobj.save("temp/sound.mp3")
@@ -55,11 +61,11 @@ def cleantext(text:str):
 def generateText(inputtext,storylen,genre,page,interactive):
     # storylen=len(inputtext)*0.5+storylen
     if page==1:
-            tokenizer = AutoTokenizer.from_pretrained("pranavpsv/genre-story-generator-v2")
-            model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2")
+            # tokenizer = AutoTokenizer.from_pretrained("pranavpsv/genre-story-generator-v2")
+            # model = AutoModelForCausalLM.from_pretrained("pranavpsv/genre-story-generator-v2")
             textinp="<BOS> <"+genre+"> "+inputtext
             story_gen=pipeline('text-generation',"pranavpsv/genre-story-generator-v2")
-            generated= story_gen(textinp,max_length=storylen,top_k=65)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace(" Tell me what happens in the story and how the story ends.","")
+            generated= story_gen(textinp,max_length=storylen,top_k=72)[0]['generated_text'].replace("<BOS> <"+genre+"> ","").replace(" Tell me what happens in the story and how the story ends.","")
             print("method generated text:",generated)
             return(cleantext(generated))
 
@@ -69,7 +75,8 @@ def generateText(inputtext,storylen,genre,page,interactive):
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
         storylen=len(tokenizer(inputtext)['input_ids'])+storylen
         inputtexts="Genre: "+genre+" Plot: "+inputtext
-        generated=gpt2.generate(sess,run_name="stories",prefix=inputtexts, include_prefix=False,length=storylen,nsamples=3,truncate="<|endoftext|>",return_as_list=True)
+        generated=gpt2.generate(sess,run_name="stories",prefix=inputtexts,top_k=72, include_prefix=False,length=storylen,nsamples=3,truncate="<|endoftext|>",return_as_list=True)
+       #try adding batch size?
         newgeneratedlist=[]
         for i in generated:
             newgeneratedlist.append(i.replace(inputtexts,""))
@@ -79,7 +86,7 @@ def generateText(inputtext,storylen,genre,page,interactive):
         gpt2.load_gpt2(sess, run_name='stories')
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
         inputtexts="Genre: "+genre+" Plot: "+inputtext
-        generated=gpt2.generate(sess,run_name="stories",prefix=inputtexts, top_k=65,include_prefix=True,length=storylen,truncate="<|endoftext|>",return_as_list=True)
+        generated=gpt2.generate(sess,run_name="stories", prefix=inputtexts, top_k=72,include_prefix=True,length=storylen,truncate="<|endoftext|>",return_as_list=True)
         return generated[0]
             # if genre=='horror':
             #     print("=============================HORROR GENERATION IN PROGRESS====================================")
@@ -219,6 +226,8 @@ if pageno=="Pipeline Based(Huggingface)":
                     nltk.download("punkt")
                     gensentences=tokenize.sent_tokenize(generated)
                     orisentences=tokenize.sent_tokenize(story_start_with)
+                    print("Generated tokens: ",gensentences)
+                    print("input tokens: ",orisentences)
                     print('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gensentences]] , [y.split() for y in orisentences])))
                     errorcheck=False
             #os.mkdir("temp")
@@ -300,8 +309,13 @@ if pageno=="Model Based":
                         st.write(generated)
                         nltk.download("punkt")
                         gensentences=tokenize.sent_tokenize(generated)
+                        gentokens=[]
+                        for i in gensentences:
+                            gentokens+=tokenize.sent_tokenize(i)
                         orisentences=tokenize.sent_tokenize(story_start_with)
-                        print('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gensentences]] , [y.split() for y in orisentences])))   
+                        print("Generated tokens: ",gentokens)
+                        print("input tokens: ",orisentences)
+                        print('BLEU score -> {}'.format(corpus_bleu([[x.split() for x in gentokens]] , [y.split() for y in orisentences])))   
                         errorcheck=False
     #audio(st.session_state.text)
     
