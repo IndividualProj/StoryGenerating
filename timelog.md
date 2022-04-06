@@ -248,17 +248,27 @@
 
 ## Week 20
 
-
 ### 2rd February
-
+* *2 hour* more bugfixes on UI
+* *2.5 hours* finetuning hyper parameters
 ## Week 21
 
 ### 9th February
 * *0.5 hour* Supervisor Meeting
 
+### 10th February
+* *5 hours* Creating Streamlit application (non-interactive)
+
+### 14th February
+
+* *4 hours* Creating hugging face model on streamlit app
+
+### 15th February
+
 ## Week 22
 
-### 16th February --survey
+### 16th February
+* *6 hours* Creating first survey
 
 ## Week 23
 
@@ -269,31 +279,66 @@
 
 ### 2nd March
 * *0.5 hour* Supervisor Meeting
+* *3 hours* Dissertation writing
 
+### 4th March
+* *2 hours* Dissertation writing
+
+### 6th March
+* *2 hours* Dissertation writing
+* *3 hours* bug fix
 ## Week 25
 
 ### 9th March
 * *0.5 hour* Supervisor Meeting
-
+* *1 hour* researching on how to implement interactive interface
 ## Week 26
 
 ### 16th March
+* *2 hour* researching on streamlit session state variables
 * *4 hour* Implementing interactive function --redo survey --resend out survey 
+* *3 hours* Redoing Survey
+* *1 hours* Sending out survey
+
+### 17th March
+* *2 hours* Bug fix
 
 ## Week 27
 
 ### 23rd March
-
+* *12 hours* Dissertation writing
+### 24th March
+* *11 hours* Dissertation writing
+### 25th March
+* *11.5 hours* Dissertation writing
+### 26th March
+* *10 hours* Dissertation writing
+### 27th March
+* *8 hours* Dissertation writing
+### 28th March
+* *15 hours* Dissertation writing
 
 ### 29th March
 * *0.5 hour* Supervisor Meeting
-
-
+* *14 hours* Dissertation writing
 
 ## Week 28
 
 ### 30th March
+* *14 hours* Dissertation writing
+### 31st March
+* *14.5 hours* Dissertation writing
+### 1st April
+* *12 hours* Dissertation writing
+### 2nd April
+* *15 hours* Dissertation writing
+### 3rd April
+* *10.5 hours* Dissertation writing
+### 4th April
+* *13.5 hours* Dissertation writing
 
 ## Week 29
 
 ### 5th March submission day!!!
+* *6.5 hours* Dissertation writing
+* *4.5 hours* presentation
